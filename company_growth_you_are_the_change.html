@@ -31,8 +31,9 @@
     background:linear-gradient(to top,rgba(0,0,0,.75),rgba(0,0,0,.15));
   }
   .message{
-    max-width:850px; text-shadow:0 3px 18px #000;
-    font-size:clamp(22px,4vw,43px); font-weight:700; line-height:1.18;
+    max-width:850px; padding:16px 22px; border-radius:18px;
+    background:rgba(0,0,0,.46); text-shadow:0 3px 18px #000;
+    font-size:clamp(20px,3.2vw,38px); font-weight:700; line-height:1.28;
   }
   .highlight{font-size:clamp(28px,5vw,58px); margin-top:14px}
   button{
@@ -51,7 +52,7 @@
     <h1>एक छोटी-सी बात...</h1>
     <div class="sub">कृपया नीचे दिए गए बटन पर क्लिक करके Camera की अनुमति दें।</div>
 
-    <button id="start">मेरी स्क्रीन पर मुझे दिखाइए</button>
+    <button id="start">देखिए… कौन है Rosy Electronics की ताकत?</button>
     <div id="status">Camera आपकी अनुमति के बाद ही चालू होगा।</div>
 
     <div class="camera hidden" id="cameraBox">
@@ -70,12 +71,15 @@
   </div>
 </div>
 
+<audio id="music" loop preload="auto"></audio>
+
 <script>
 const start = document.getElementById('start');
 const video = document.getElementById('video');
 const box = document.getElementById('cameraBox');
 const status = document.getElementById('status');
 const msg = document.getElementById('message');
+const music = document.getElementById('music');
 
 start.onclick = async () => {
   try {
@@ -87,22 +91,31 @@ start.onclick = async () => {
     box.classList.remove('hidden');
     start.classList.add('hidden');
     status.textContent = "अब स्क्रीन को ध्यान से देखिए...";
+    music.volume = 0.16;
+    music.play().catch(() => {});
 
     setTimeout(() => {
       msg.innerHTML =
-        'आप अपनी स्क्रीन पर जिसे देख रहे हैं...<div class="highlight">वह कोई आम इंसान नहीं है।</div>';
+        'अब इस चेहरे को ध्यान से देखिए...<div class="highlight">Rosy Electronics की ताकत कौन है?</div>';
     }, 1800);
 
     setTimeout(() => {
       msg.innerHTML =
-        'वह वही इंसान है जो हमारी<br>Company की Growth में बदलाव ला सकता है।' +
+        'आपकी सोच, आपकी Knowledge और आपका Experience<br>Company की Growth को नई ऊँचाइयों तक ले जा सकता है।' +
         '<div class="highlight">वह इंसान... आप हैं।</div>';
     }, 4200);
 
     setTimeout(() => {
       msg.innerHTML =
-        'हमारी Company की कई कमियों को<br>जड़ से ठीक करने की शुरुआत...<div class="highlight">आपसे हो सकती है।</div>';
+        'छोटी-छोटी कमियों में सुधार और बेहतर काम की एक नई सोच...' +
+        '<div class="highlight">शुरुआत आपसे हो सकती है।</div>';
     }, 7600);
+
+    setTimeout(() => {
+      msg.innerHTML =
+        'Rosy Electronics की Growth में आपका योगदान महत्वपूर्ण है।' +
+        '<div class="highlight">THE CHANGE STARTS WITH YOU.</div>';
+    }, 11000);
 
   } catch (err) {
     status.textContent = "Camera permission नहीं मिली। कृपया Allow करके दोबारा कोशिश करें।";
