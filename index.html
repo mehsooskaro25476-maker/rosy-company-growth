@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Rosy Electronics</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -11,6 +11,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             color: #fff;
             height: 100vh;
+            width: 100vw;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -18,7 +19,7 @@
             overflow: hidden;
         }
 
-        /* पहला व्यू (Welcome Screen) */
+        /* 1. वेलकम स्क्रीन (स्क्रीनशॉट जैसा) */
         #welcome-screen {
             display: flex;
             flex-direction: column;
@@ -28,6 +29,9 @@
             width: 100%;
             height: 100%;
             padding: 20px;
+            position: absolute;
+            z-index: 10;
+            background: #000;
         }
         .main-title {
             font-size: 2.5rem;
@@ -47,24 +51,16 @@
             transition: transform 0.2s;
             margin-bottom: 50px;
         }
-        .action-btn:active {
-            transform: scale(0.95);
-        }
         .arrow-icon {
             font-size: 2rem;
             animation: bounce 2s infinite;
         }
 
-        /* कैमरा और मैसेज व्यू (शुरुआत में छुपा रहेगा) */
+        /* 2. मुख्य कैमरा व्यू */
         #main-view {
             display: none;
             width: 100%;
             height: 100%;
-            flex-direction: column;
-        }
-        .camera-container {
-            flex: 1;
-            background: #000;
             position: relative;
         }
         video {
@@ -74,28 +70,30 @@
             transform: scaleX(-1); /* मिरर इफेक्ट */
         }
         
-        /* नया मोबाइल-फ्रेंडली रनिंग मैसेज */
-        .footer {
-            background: #111;
-            padding: 20px 10px;
-            border-top: 3px solid #ff9900;
+        /* 3. पक्का और नया रनिंग मैसेज (कैमरे के ऊपर तैरता हुआ) */
+        .footer-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.85); /* काला पारदर्शी बैकग्राउंड */
+            padding: 25px 10px;
+            border-top: 4px solid #ff9900;
             overflow: hidden;
             white-space: nowrap;
-            width: 100%;
-            display: flex;
-            align-items: center;
+            z-index: 9999 !important; /* सबसे ऊपर रखने के लिए */
         }
+        
         .running-text {
             display: inline-block;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: bold;
             color: #ff9900;
-            padding-left: 100%;
-            animation: marqueeEffect 15s linear infinite;
+            animation: marqueeEffect 18s linear infinite;
         }
 
         @keyframes marqueeEffect {
-            0% { transform: translate3d(0, 0, 0); }
+            0% { transform: translate3d(100%, 0, 0); }
             100% { transform: translate3d(-100%, 0, 0); }
         }
 
@@ -108,7 +106,7 @@
 </head>
 <body>
 
-    <!-- 1. पहला व्यू: जो स्क्रीनशॉट जैसा दिखेगा -->
+    <!-- पहला व्यू -->
     <div id="welcome-screen">
         <div class="main-title">एक छोटी-सी बात...</div>
         <button class="action-btn" onclick="startExperience()">
@@ -117,12 +115,12 @@
         <div class="arrow-icon">⬇️</div>
     </div>
 
-    <!-- 2. दूसरा व्यू: क्लिक करने के बाद फुल स्क्रीन कामना और मैसेज -->
+    <!-- दूसरा व्यू (क्लिक के बाद) -->
     <div id="main-view">
-        <div class="camera-container">
-            <video id="webcam" autoplay playsinline></video>
-        </div>
-        <div class="footer">
+        <video id="webcam" autoplay playsinline></video>
+        
+        <!-- कैमरे के ऊपर तैरती हुई पट्टी -->
+        <div class="footer-overlay">
             <div class="running-text">
                 यह जो सामने चेहरा या व्यक्ति नज़र आ रहा है, यही वो इंसान है जो कंपनी को अपनी सूझ-बूझ और कड़ी मेहनत से आगे प्रगति पर ले जा सकता है...
             </div>
@@ -133,18 +131,17 @@
         function startExperience() {
             const video = document.getElementById('webcam');
             
-            // कैमरा एक्सेस मांगना
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
                     .then(stream => { 
                         video.srcObject = stream;
                         
-                        // पहला स्क्रीन छुपाना और कैमरा स्क्रीन दिखाना
+                        // स्क्रीन बदलना
                         document.getElementById('welcome-screen').style.display = 'none';
-                        document.getElementById('main-view').style.display = 'flex';
+                        document.getElementById('main-view').style.display = 'block';
                     })
                     .catch(err => { 
-                        alert("कृपया कैमरा एक्सेस की अनुमति दें ताकि आप खुद को स्क्रीन पर देख सकें।"); 
+                        alert("कृपया कैमरा एक्सेस की अनुमति दें ताकि आप खुद को देख सकें।"); 
                     });
             } else {
                 alert("आपका ब्राउज़र कैमरा सपोर्ट नहीं करता है। कृपया क्रोम या सफारी का उपयोग करें।");
