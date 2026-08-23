@@ -19,7 +19,7 @@
             overflow: hidden;
         }
 
-        /* 1. वेलकम स्क्रीन (अब आपकी नई दमदार लाइन के साथ) */
+        /* 1. वेलकम स्क्रीन */
         #welcome-screen {
             display: flex;
             flex-direction: column;
@@ -69,7 +69,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transform: scaleX(-1); /* मिरर इफेक्ट */
+            transform: scaleX(-1);
         }
         
         /* 3. चेहरे के नीचे रहने वाला मैसेज बॉक्स */
@@ -118,7 +118,7 @@
 </head>
 <body>
 
-    <!-- पहला व्यू (अपडेटेड हेडिंग) -->
+    <!-- पहला व्यू -->
     <div id="welcome-screen">
         <div class="main-title">एक बात जोकि आप सबको पता होनी चाहिए...</div>
         <button class="action-btn" onclick="startExperience()">
@@ -142,7 +142,6 @@
         function startExperience() {
             const video = document.getElementById('webcam');
             
-            // सीधे और सबसे तेज़ तरीके से कैमरा लोड करना
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
                     .then(stream => { 
@@ -152,11 +151,10 @@
                         document.getElementById('welcome-screen').style.display = 'none';
                         document.getElementById('main-view').style.display = 'block';
                     })
-                    .catch(err => { 
-                        alert("कृपया कैमरा अनुमति (Allow) दें ताकि आप खुद को स्क्रीन पर देख सकें।"); 
+                    .catch(err => {
+                        // यहाँ से पुराना हिंदी पॉप-अप मैसेज पूरी तरह हटा दिया गया है
+                        console.log("Camera access denied or error occurred.");
                     });
-            } else {
-                alert("आपका ब्राउज़र कैमरा सपोर्ट नहीं करता है। कृपया क्रोम या सफारी का उपयोग करें।");
             }
         }
     </script>
