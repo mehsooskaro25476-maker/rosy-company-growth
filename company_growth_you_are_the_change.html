@@ -11,31 +11,30 @@
     font-family:Arial,Helvetica,sans-serif; display:flex; align-items:center;
     justify-content:center; overflow:hidden;
   }
-  .wrap{width:min(100%,1100px); padding:22px; text-align:center}
+  .wrap{width:100%; height:100vh; padding:0; text-align:center}
   .card{
-    position:relative; overflow:hidden; border-radius:24px;
-    background:linear-gradient(145deg,#111827,#05070c);
-    border:1px solid rgba(255,255,255,.12);
-    box-shadow:0 25px 80px rgba(0,0,0,.55); padding:22px;
+    position:relative; width:100%; height:100vh; overflow:hidden;
+    background:#020409; border:0; border-radius:0; box-shadow:none; padding:0;
   }
-  h1{font-size:clamp(26px,5vw,52px); margin:4px 0 8px}
-  .sub{color:#cbd5e1; font-size:clamp(15px,2.2vw,21px); margin-bottom:18px}
+  h1{font-size:clamp(28px,6vw,54px); margin:0 0 12px}
+  .sub{color:#fff; font-size:clamp(18px,4vw,30px); margin-bottom:22px; font-weight:700}
   .camera{
-    width:min(100%,820px); aspect-ratio:16/9; margin:auto; position:relative;
-    background:#020409; border-radius:18px; overflow:hidden;
+    width:100%; height:100%; margin:0; position:absolute; inset:0;
+    background:#020409; border-radius:0; overflow:hidden;
   }
   video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
-  .overlay{
-    position:absolute; inset:0; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; padding:25px;
-    background:linear-gradient(to top,rgba(0,0,0,.75),rgba(0,0,0,.15));
+  .message-bar{
+    position:absolute; left:5%; right:5%; top:62%; transform:translateY(-50%);
+    overflow:hidden; z-index:5; padding:12px 0; border-radius:14px;
+    background:rgba(0,0,0,.42); border:1px solid rgba(255,255,255,.14);
   }
-  .message{
-    max-width:850px; padding:16px 22px; border-radius:18px;
-    background:rgba(0,0,0,.46); text-shadow:0 3px 18px #000;
-    font-size:clamp(20px,3.2vw,38px); font-weight:700; line-height:1.28;
+  .ticker{
+    display:inline-block; white-space:nowrap; padding-left:100%;
+    font-size:clamp(19px,4vw,34px); font-weight:700; line-height:1.25;
+    text-shadow:0 2px 10px #000; animation:tickerMove 22s linear infinite;
   }
-  .highlight{font-size:clamp(28px,5vw,58px); margin-top:14px}
+  @keyframes tickerMove{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+  .hidden{display:none}
   button{
     margin-top:18px; border:0; border-radius:999px; padding:14px 25px;
     font-size:17px; font-weight:700; cursor:pointer;
@@ -49,29 +48,20 @@
 <body>
 <div class="wrap">
   <div class="card">
-    <h1>एक छोटी-सी बात...</h1>
-    <div class="sub">कृपया नीचे दिए गए बटन पर क्लिक करके Camera की अनुमति दें।</div>
-
-    <button id="start">देखिए… कौन है Rosy Electronics की ताकत?</button>
-    <div id="status">Camera आपकी अनुमति के बाद ही चालू होगा।</div>
+    <div id="intro">
+      <h1>एक छोटी-सी बात...</h1>
+      
+      <button id="start">देखिए… कौन है Rosy Electronics की ताकत?</button>
+    </div>
 
     <div class="camera hidden" id="cameraBox">
       <video id="video" autoplay playsinline muted></video>
-      <div class="overlay">
-        <div class="message" id="message">
-          आप अपनी स्क्रीन पर जिसे देख रहे हैं...
-          <div class="highlight">वह कोई आम इंसान नहीं है।</div>
+      <div class="message-bar">
+        <div class="ticker" id="message">
+          अब इस चेहरे को ध्यान से देखिए… • Rosy Electronics की ताकत कौन है? • आपकी सोच, आपकी Knowledge और आपका Experience Company की Growth को नई ऊँचाइयों तक ले जा सकता है। • वह इंसान… आप हैं। • THE CHANGE STARTS WITH YOU.
         </div>
       </div>
     </div>
-
-    <div class="small">
-      यह demo केवल आपके browser की अनुमति से camera दिखाता है। Video कहीं upload या save नहीं किया जाता।
-    </div>
-  </div>
-</div>
-
-<audio id="music" loop preload="auto"></audio>
 
 <script>
 const start = document.getElementById('start');
@@ -79,7 +69,7 @@ const video = document.getElementById('video');
 const box = document.getElementById('cameraBox');
 const status = document.getElementById('status');
 const msg = document.getElementById('message');
-const music = document.getElementById('music');
+const intro = document.getElementById('intro');
 
 start.onclick = async () => {
   try {
@@ -89,36 +79,9 @@ start.onclick = async () => {
     });
     video.srcObject = stream;
     box.classList.remove('hidden');
-    start.classList.add('hidden');
-    status.textContent = "अब स्क्रीन को ध्यान से देखिए...";
-    music.volume = 0.16;
-    music.play().catch(() => {});
-
-    setTimeout(() => {
-      msg.innerHTML =
-        'अब इस चेहरे को ध्यान से देखिए...<div class="highlight">Rosy Electronics की ताकत कौन है?</div>';
-    }, 1800);
-
-    setTimeout(() => {
-      msg.innerHTML =
-        'आपकी सोच, आपकी Knowledge और आपका Experience<br>Company की Growth को नई ऊँचाइयों तक ले जा सकता है।' +
-        '<div class="highlight">वह इंसान... आप हैं।</div>';
-    }, 4200);
-
-    setTimeout(() => {
-      msg.innerHTML =
-        'छोटी-छोटी कमियों में सुधार और बेहतर काम की एक नई सोच...' +
-        '<div class="highlight">शुरुआत आपसे हो सकती है।</div>';
-    }, 7600);
-
-    setTimeout(() => {
-      msg.innerHTML =
-        'Rosy Electronics की Growth में आपका योगदान महत्वपूर्ण है।' +
-        '<div class="highlight">THE CHANGE STARTS WITH YOU.</div>';
-    }, 11000);
-
-  } catch (err) {
-    status.textContent = "Camera permission नहीं मिली। कृपया Allow करके दोबारा कोशिश करें।";
+    intro.classList.add('hidden');
+} catch (err) {
+    alert("Camera permission नहीं मिली। कृपया Allow करके दोबारा कोशिश करें।");
   }
 };
 </script>
