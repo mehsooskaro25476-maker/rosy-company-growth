@@ -19,7 +19,7 @@
             overflow: hidden;
         }
 
-        /* 1. वेलकम स्क्रीन (स्क्रीनशॉट जैसा) */
+        /* 1. वेलकम स्क्रीन */
         #welcome-screen {
             display: flex;
             flex-direction: column;
@@ -70,33 +70,41 @@
             transform: scaleX(-1); /* मिरर इफेक्ट */
         }
         
-        /* 3. पट्टी को नीचे से ऊपर खिसकाया गया (Floating Overlay) */
-        .footer-overlay {
+        /* 3. नया बॉक्स: जो सिर्फ चेहरे के नीचे रहेगा और मैसेज नीचे से ऊपर चलेगा */
+        .footer-box-upward {
             position: absolute;
-            bottom: 40px; /* इसे 0 से बढ़ाकर 40px कर दिया है ताकि यह ऊपर दिखे */
+            bottom: 20px; /* स्क्रीन के नीचे से थोड़ा ऊपर फिक्स */
             left: 5%;
-            width: 90%; /* दोनों तरफ से थोड़ी जगह छोड़ी है ताकि सुंदर दिखे */
-            background: rgba(0, 0, 0, 0.85) !important; /* गाढ़ा काला बैकग्राउंड */
-            padding: 18px 10px;
-            border: 2px solid #ff9900; /* चारों तरफ सुंदर बॉर्डर */
-            border-radius: 15px; /* कोनों को गोल किया है */
-            overflow: hidden;
-            white-space: nowrap;
+            width: 90%;
+            height: 120px; /* निश्चित ऊंचाई ताकि चेहरा न छुपे */
+            background: rgba(0, 0, 0, 0.8) !important; /* अर्ध-पारदर्शी काला */
+            border: 2px solid #ff9900;
+            border-radius: 12px;
+            overflow: hidden; /* इसके बाहर टेक्स्ट नहीं जाएगा */
             z-index: 999999 !important;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
-        .running-text {
-            display: inline-block;
-            font-size: 1.5rem !important;
+        /* नीचे से ऊपर जाने वाला एनीमेशन (Upward Text) */
+        .upward-text {
+            display: block;
+            width: 100%;
+            font-size: 1.4rem !important;
             font-weight: bold;
             color: #ff9900 !important;
-            animation: marqueeEffect 18s linear infinite;
+            text-align: center;
+            white-space: normal; /* लाइनें अपने आप नीचे शिफ्ट होंगी */
+            padding: 0 15px;
+            position: relative;
+            animation: scrollUpEffect 12s linear infinite;
         }
 
-        @keyframes marqueeEffect {
-            0% { transform: translate3d(100%, 0, 0); }
-            100% { transform: translate3d(-100%, 0, 0); }
+        @keyframes scrollUpEffect {
+            0% { transform: translateY(120px); }   /* बॉक्स के नीचे से शुरू होगा */
+            100% { transform: translateY(-120px); } /* बॉक्स के ऊपर ख़त्म होगा */
         }
 
         @keyframes bounce {
@@ -121,9 +129,9 @@
     <div id="main-view">
         <video id="webcam" autoplay playsinline></video>
         
-        <!-- कैमरे के ऊपर तैरती हुई पट्टी जो अब थोड़ी ऊपर है -->
-        <div class="footer-overlay">
-            <div class="running-text">
+        <!-- नया बॉक्स जो सिर्फ चेहरे के नीचे रहेगा -->
+        <div class="footer-box-upward">
+            <div class="upward-text">
                 यह जो सामने चेहरा या व्यक्ति नज़र आ रहा है, यही वो इंसान है जो कंपनी को अपनी सूझ-बूझ और कड़ी मेहनत से आगे प्रगति पर ले जा सकता है...
             </div>
         </div>
