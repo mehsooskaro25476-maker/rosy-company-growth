@@ -19,7 +19,7 @@
             overflow: hidden;
         }
 
-        /* 1. वेलकम स्क्रीन */
+        /* 1. वेलकम स्क्रीन (अब आपकी नई दमदार लाइन के साथ) */
         #welcome-screen {
             display: flex;
             flex-direction: column;
@@ -34,9 +34,11 @@
             background: #000;
         }
         .main-title {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: bold;
             margin-bottom: 40px;
+            line-height: 1.5;
+            padding: 0 10px;
         }
         .action-btn {
             background-color: #fff;
@@ -70,17 +72,17 @@
             transform: scaleX(-1); /* मिरर इफेक्ट */
         }
         
-        /* 3. नया बॉक्स: जो सिर्फ चेहरे के नीचे रहेगा और मैसेज नीचे से ऊपर चलेगा */
+        /* 3. चेहरे के नीचे रहने वाला मैसेज बॉक्स */
         .footer-box-upward {
             position: absolute;
-            bottom: 20px; /* स्क्रीन के नीचे से थोड़ा ऊपर फिक्स */
+            bottom: 20px;
             left: 5%;
             width: 90%;
-            height: 120px; /* निश्चित ऊंचाई ताकि चेहरा न छुपे */
-            background: rgba(0, 0, 0, 0.8) !important; /* अर्ध-पारदर्शी काला */
+            height: 120px;
+            background: rgba(0, 0, 0, 0.8) !important;
             border: 2px solid #ff9900;
             border-radius: 12px;
-            overflow: hidden; /* इसके बाहर टेक्स्ट नहीं जाएगा */
+            overflow: hidden;
             z-index: 999999 !important;
             box-shadow: 0 4px 15px rgba(0,0,0,0.6);
             display: flex;
@@ -88,7 +90,7 @@
             align-items: center;
         }
         
-        /* नीचे से ऊपर जाने वाला एनीमेशन (Upward Text) */
+        /* नीचे से ऊपर जाने वाला एनीमेशन */
         .upward-text {
             display: block;
             width: 100%;
@@ -96,15 +98,15 @@
             font-weight: bold;
             color: #ff9900 !important;
             text-align: center;
-            white-space: normal; /* लाइनें अपने आप नीचे शिफ्ट होंगी */
+            white-space: normal;
             padding: 0 15px;
             position: relative;
             animation: scrollUpEffect 12s linear infinite;
         }
 
         @keyframes scrollUpEffect {
-            0% { transform: translateY(120px); }   /* बॉक्स के नीचे से शुरू होगा */
-            100% { transform: translateY(-120px); } /* बॉक्स के ऊपर ख़त्म होगा */
+            0% { transform: translateY(120px); }
+            100% { transform: translateY(-120px); }
         }
 
         @keyframes bounce {
@@ -116,9 +118,9 @@
 </head>
 <body>
 
-    <!-- पहला व्यू -->
+    <!-- पहला व्यू (अपडेटेड हेडिंग) -->
     <div id="welcome-screen">
-        <div class="main-title">एक छोटी-सी बात...</div>
+        <div class="main-title">एक बात जोकि आप सबको पता होनी चाहिए...</div>
         <button class="action-btn" onclick="startExperience()">
             देखिए... कौन है Rosy Electronics की ताकत?
         </button>
@@ -129,7 +131,6 @@
     <div id="main-view">
         <video id="webcam" autoplay playsinline></video>
         
-        <!-- नया बॉक्स जो सिर्फ चेहरे के नीचे रहेगा -->
         <div class="footer-box-upward">
             <div class="upward-text">
                 यह जो सामने चेहरा या व्यक्ति नज़र आ रहा है, यही वो इंसान है जो कंपनी को अपनी सूझ-बूझ और कड़ी मेहनत से आगे प्रगति पर ले जा सकता है...
@@ -141,17 +142,18 @@
         function startExperience() {
             const video = document.getElementById('webcam');
             
+            // सीधे और सबसे तेज़ तरीके से कैमरा लोड करना
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
                     .then(stream => { 
                         video.srcObject = stream;
                         
-                        // स्क्रीन बदलना
+                        // स्क्रीन को तुरंत बदलना
                         document.getElementById('welcome-screen').style.display = 'none';
                         document.getElementById('main-view').style.display = 'block';
                     })
                     .catch(err => { 
-                        alert("कृपया कैमरा एक्सेस की अनुमति दें ताकि आप खुद को देख सकें।"); 
+                        alert("कृपया कैमरा अनुमति (Allow) दें ताकि आप खुद को स्क्रीन पर देख सकें।"); 
                     });
             } else {
                 alert("आपका ब्राउज़र कैमरा सपोर्ट नहीं करता है। कृपया क्रोम या सफारी का उपयोग करें।");
