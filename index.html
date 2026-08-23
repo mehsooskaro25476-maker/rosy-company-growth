@@ -70,25 +70,27 @@
             transform: scaleX(-1); /* मिरर इफेक्ट */
         }
         
-        /* 3. पक्का और नया रनिंग मैसेज (कैमरे के ऊपर तैरता हुआ) */
+        /* 3. पट्टी को नीचे से ऊपर खिसकाया गया (Floating Overlay) */
         .footer-overlay {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.9) !important; /* गाढ़ा काला बैकग्राउंड */
-            padding: 25px 10px;
-            border-top: 5px solid #ff9900;
+            bottom: 40px; /* इसे 0 से बढ़ाकर 40px कर दिया है ताकि यह ऊपर दिखे */
+            left: 5%;
+            width: 90%; /* दोनों तरफ से थोड़ी जगह छोड़ी है ताकि सुंदर दिखे */
+            background: rgba(0, 0, 0, 0.85) !important; /* गाढ़ा काला बैकग्राउंड */
+            padding: 18px 10px;
+            border: 2px solid #ff9900; /* चारों तरफ सुंदर बॉर्डर */
+            border-radius: 15px; /* कोनों को गोल किया है */
             overflow: hidden;
             white-space: nowrap;
-            z-index: 999999 !important; /* सबसे ऊपर रखने के लिए */
+            z-index: 999999 !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
         
         .running-text {
             display: inline-block;
-            font-size: 1.6rem !important; /* अक्षरों को बड़ा किया */
+            font-size: 1.5rem !important;
             font-weight: bold;
-            color: #ff9900 !important; /* चमकीला संतरी रंग */
+            color: #ff9900 !important;
             animation: marqueeEffect 18s linear infinite;
         }
 
@@ -119,7 +121,7 @@
     <div id="main-view">
         <video id="webcam" autoplay playsinline></video>
         
-        <!-- कैमरे के ऊपर तैरती हुई पट्टी -->
+        <!-- कैमरे के ऊपर तैरती हुई पट्टी जो अब थोड़ी ऊपर है -->
         <div class="footer-overlay">
             <div class="running-text">
                 यह जो सामने चेहरा या व्यक्ति नज़र आ रहा है, यही वो इंसान है जो कंपनी को अपनी सूझ-बूझ और कड़ी मेहनत से आगे प्रगति पर ले जा सकता है...
