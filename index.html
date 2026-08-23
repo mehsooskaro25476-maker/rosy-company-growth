@@ -3,46 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROSY Electronics</title>
+    <title>Rosy Electronics</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
             background: #000; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            display: flex; 
-            flex-direction: column; 
-            height: 100vh; 
-            overflow: hidden; 
-        }
-        
-        /* टॉप हेडिंग */
-        .header {
-            background: linear-gradient(135deg, #1f4068, #162447);
-            color: #ffffff;
-            text-align: center;
-            padding: 15px 10px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            line-height: 1.5;
-            border-bottom: 4px solid #e43f5a;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-        .header span {
-            display: block;
-            font-size: 1.1rem;
-            color: #ffcc00;
-            font-weight: normal;
-            margin-bottom: 5px;
-        }
-        
-        /* कैमरा स्क्रीन */
-        .camera-container {
-            flex: 1;
-            position: relative;
-            background: #111;
+            color: #fff;
+            height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
+        }
+
+        /* पहला व्यू (Welcome Screen) */
+        #welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+        }
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+        .action-btn {
+            background-color: #fff;
+            color: #000;
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255,255,255,0.2);
+            transition: transform 0.2s;
+            margin-bottom: 50px;
+        }
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+        .arrow-icon {
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+        }
+
+        /* कैमरा और मैसेज व्यू (शुरुआत में छुपा रहेगा) */
+        #main-view {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+        }
+        .camera-container {
+            flex: 1;
+            background: #000;
+            position: relative;
         }
         video {
             width: 100%;
@@ -50,57 +73,69 @@
             object-fit: cover;
             transform: scaleX(-1); /* मिरर इफेक्ट */
         }
-        
-        /* बॉटम रनिंग मैसेज */
         .footer {
-            background: #1b1b2f;
+            background: #111;
             padding: 20px 10px;
-            border-top: 4px solid #e43f5a;
+            border-top: 3px solid #ff9900;
             display: flex;
             align-items: center;
         }
         marquee {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: bold;
-            color: #e43f5a;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            color: #ff9900;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
         }
     </style>
 </head>
 <body>
 
-    <!-- पहला व्यू: मुख्य सवाल -->
-    <div class="header">
-        <span>एक बात जो कि आप सबको पता होनी चाहिए...</span>
-        कौन है "ROSY Electronics" की असली ताक़त?
+    <!-- 1. पहला व्यू: जो स्क्रीनशॉट जैसा दिखेगा -->
+    <div id="welcome-screen">
+        <div class="main-title">एक छोटी-सी बात...</div>
+        <button class="action-btn" onclick="startExperience()">
+            देखिए... कौन है Rosy Electronics की ताकत?
+        </button>
+        <div class="arrow-icon">⬇️</div>
     </div>
 
-    <!-- कैमरा व्यू जो जवाब देगा -->
-    <div class="camera-container">
-        <video id="webcam" autoplay playsinline></video>
-    </div>
-
-    <!-- नीचे चलने वाला मोटिवेशनल मैसेज -->
-    <div class="footer">
-        <marquee behavior="scroll" direction="left" scrollamount="7">
-            यह जो सामने चेहरा या व्यक्ति नज़र आ रहा है, यही वो इंसान है जो कंपनी को अपनी सूझ-बूझ और कड़ी मेहनत से आगे प्रगति पर ले जा सकता है...
-        </marquee>
+    <!-- 2. दूसरा व्यू: क्लिक करने के बाद फुल स्क्रीन कैमरा और मैसेज -->
+    <div id="main-view">
+        <div class="camera-container">
+            <video id="webcam" autoplay playsinline></video>
+        </div>
+        <div class="footer">
+            <marquee behavior="scroll" direction="left" scrollamount="7">
+                यह जो सामने चेहरा या व्यक्ति नज़र आ रहा है, यही वो इंसान है जो कंपनी को अपनी सूझ-बूझ और कड़ी मेहनत से आगे प्रगति पर ले जा सकता है...
+            </marquee>
+        </div>
     </div>
 
     <script>
-        // कैमरा चालू करने की स्क्रिप्ट
-        const video = document.getElementById('webcam');
-        
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
-                .then(stream => { 
-                    video.srcObject = stream; 
-                })
-                .catch(err => { 
-                    alert("कृपया कैमरा एक्सेस की अनुमति दें ताकि आप खुद को स्क्रीन पर देख सकें।"); 
-                });
-        } else {
-            alert("आपका ब्राउज़र कैमरा सपोर्ट नहीं करता है। कृपया क्रोम या सफारी का उपयोग करें।");
+        function startExperience() {
+            const video = document.getElementById('webcam');
+            
+            // कैमरा एक्सेस मांगना
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
+                    .then(stream => { 
+                        video.srcObject = stream;
+                        
+                        // पहला स्क्रीन छुपाना और कैमरा स्क्रीन दिखाना
+                        document.getElementById('welcome-screen').style.display = 'none';
+                        document.getElementById('main-view').style.display = 'flex';
+                    })
+                    .catch(err => { 
+                        alert("कृपया कैमरा एक्सेस की अनुमति दें ताकि आप खुद को स्क्रीन पर देख सकें।"); 
+                    });
+            } else {
+                alert("आपका ब्राउज़र कैमरा सपोर्ट नहीं करता है। कृपया क्रोम या सफारी का उपयोग करें।");
+            }
         }
     </script>
 </body>
