@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROSY Electronics</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background: #000; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+        
+        /* टॉप हेडिंग */
+        .header {
+            background: linear-gradient(135deg, #1f4068, #162447);
+            color: #ffffff;
+            text-align: center;
+            padding: 15px 10px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            line-height: 1.5;
+            border-bottom: 4px solid #e43f5a;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .header span {
+            display: block;
+            font-size: 1.1rem;
+            color: #ffcc00;
+            font-weight: normal;
+            margin-bottom: 5px;
+        }
+        
+        /* कैमरा स्क्रीन */
+        .camera-container {
+            flex: 1;
+            position: relative;
+            background: #111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1); /* मिरर इफेक्ट */
+        }
+        
+        /* बॉटम रनिंग मैसेज */
+        .footer {
+            background: #1b1b2f;
+            padding: 20px 10px;
+            border-top: 4px solid #e43f5a;
+            display: flex;
+            align-items: center;
+        }
+        marquee {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #e43f5a;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- पहला व्यू: मुख्य सवाल -->
+    <div class="header">
+        <span>एक बात जो कि आप सबको पता होनी चाहिए...</span>
+        कौन है "ROSY Electronics" की असली ताक़त?
+    </div>
+
+    <!-- कैमरा व्यू जो जवाब देगा -->
+    <div class="camera-container">
+        <video id="webcam" autoplay playsinline></video>
+    </div>
+
+    <!-- नीचे चलने वाला मोटिवेशनल मैसेज -->
+    <div class="footer">
+        <marquee behavior="scroll" direction="left" scrollamount="7">
+            यह जो सामने चेहरा या व्यक्ति नज़र आ रहा है, यही वो इंसान है जो कंपनी को अपनी सूझ-बूझ और कड़ी मेहनत से आगे प्रगति पर ले जा सकता है...
+        </marquee>
+    </div>
+
+    <script>
+        // कैमरा चालू करने की स्क्रिप्ट
+        const video = document.getElementById('webcam');
+        
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
+                .then(stream => { 
+                    video.srcObject = stream; 
+                })
+                .catch(err => { 
+                    alert("कृपया कैमरा एक्सेस की अनुमति दें ताकि आप खुद को स्क्रीन पर देख सकें।"); 
+                });
+        } else {
+            alert("आपका ब्राउज़र कैमरा सपोर्ट नहीं करता है। कृपया क्रोम या सफारी का उपयोग करें।");
+        }
+    </script>
+</body>
+</html>
