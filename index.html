@@ -7,94 +7,48 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            background: #000; 
-            font-family: 'Arial', sans-serif; 
-            color: #fff;
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
+            background: #000; font-family: Arial, sans-serif; color: #fff;
+            height: 100vh; width: 100vw; display: flex;
+            flex-direction: column; justify-content: center; align-items: center; overflow: hidden;
         }
 
         /* 1. वेलकम स्क्रीन */
         #welcome-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            width: 100%;
-            height: 100%;
-            padding: 20px;
-            position: absolute;
-            z-index: 10;
-            background: #000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; width: 100%; height: 100%; padding: 20px;
+            position: absolute; z-index: 10; background: #000;
         }
-        .main-title {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 30px;
-            line-height: 1.4;
-        }
+        .main-title { font-size: 1.8rem; font-weight: bold; margin-bottom: 30px; line-height: 1.4; }
         .action-btn {
-            background-color: #fff;
-            color: #000;
-            font-size: 1.1rem;
-            font-weight: bold;
-            padding: 16px 25px;
-            border-radius: 50px;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255,255,255,0.2);
-            transition: transform 0.2s;
-            max-width: 90%;
-            line-height: 1.3;
+            background-color: #fff; color: #000; font-size: 1.1rem; font-weight: bold;
+            padding: 16px 25px; border-radius: 50px; border: none; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255,255,255,0.2); max-width: 90%; line-height: 1.3;
         }
-        /* तीर (Arrow) हटा दिया गया है */
 
-        /* 2. मुख्य कैमरा व्यू */
+        /* 2. मुख्य कैमरा व्यू और एरर मैसेज */
         #main-view { display: none; width: 100%; height: 100%; position: relative; }
         video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
         
-        /* 3. पारदर्शी टेक्स्ट एरिया */
-        .text-container-transparent {
-            position: absolute;
-            bottom: 40px;
-            left: 5%;
-            width: 90%;
-            height: 400px;
-            overflow: hidden;
-            z-index: 999999 !important;
-            background: transparent !important;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        #error-message {
+            display: none; padding: 30px; text-align: center;
+            flex-direction: column; justify-content: center; align-items: center;
+            height: 100%; width: 100%; background: #000;
         }
-        
-        /* बेहतर दृश्यता वाला फॉन्ट और एनीमेशन */
+        .retry-btn { margin-top: 20px; padding: 10px 20px; background: #fff; color: #000; border-radius: 20px; text-decoration: none; }
+
+        /* 3. मोटिवेशनल टेक्स्ट */
+        .text-container-transparent {
+            position: absolute; bottom: 40px; left: 5%; width: 90%; height: 400px;
+            overflow: hidden; z-index: 999999; background: transparent;
+            display: none; justify-content: center; align-items: center;
+        }
         .upward-text {
-            display: block;
-            width: 100%;
-            font-size: 1.6rem !important;
-            font-weight: bold;
-            color: #fff !important; /* मुख्य टेक्स्ट सफ़ेद */
-            text-align: center;
-            white-space: normal;
-            padding: 0 10px;
-            position: relative;
-            line-height: 1.7;
-            /* मल्टीपल शैडो इफ़ेक्ट ताकि लाइट या डार्क बैकग्राउंड पर साफ़ दिखे */
-            text-shadow: 2px 2px 5px #000, -2px -2px 5px #000, 2px -2px 5px #000, -2px 2px 5px #000; 
+            display: block; width: 100%; font-size: 1.6rem; font-weight: bold;
+            color: #fff; text-align: center; white-space: normal;
+            line-height: 1.7; text-shadow: 2px 2px 5px #000, -2px -2px 5px #000; 
             animation: scrollUpEffect 22s linear infinite;
         }
-
-        .highlight {
-            color: #FFFF00 !important; /* हाईलाइट पीला रंग */
-            text-shadow: 0 0 10px rgba(255, 251, 0, 0.8), 2px 2px 4px #000;
-        }
+        .highlight { color: #FFFF00 !important; }
 
         @keyframes scrollUpEffect {
             0% { transform: translateY(400px); }
@@ -108,6 +62,7 @@
         <source src="https://mixkit.co" type="audio/mpeg">
     </audio>
 
+    <!-- वेलकम स्क्रीन -->
     <div id="welcome-screen">
         <div class="main-title">एक बात जोकि आप सबको पता होनी चाहिए...</div>
         <button class="action-btn" onclick="startExperience()">
@@ -115,9 +70,20 @@
         </button>
     </div>
 
+    <!-- एरर मैसेज (अगर परमिशन नहीं दी) -->
+    <div id="error-message">
+        <h2 style="color: #ffcc00;">कैमरा ब्लॉक है!</h2>
+        <p style="margin-top: 15px;">असली ताकत देखने के लिए कैमरा जरूरी है।</p>
+        <p style="font-size: 0.9rem; color: #aaa; margin-top: 10px;">
+            सेटिंग सुधारें: ऊपर <b>तीन बिंदुओं</b> (⋮) पर जाएं > <b>Settings</b> > <b>Site Settings</b> > <b>Camera</b> > इस साइट को <b>Allow</b> करें।
+        </p>
+        <a href="javascript:location.reload()" class="retry-btn">दोबारा कोशिश करें</a>
+    </div>
+
+    <!-- कैमरा और मैसेज -->
     <div id="main-view">
         <video id="webcam" autoplay playsinline></video>
-        <div class="text-container-transparent">
+        <div id="msg-box" class="text-container-transparent">
             <div class="upward-text">
                 यह जो सामने चेहरा या व्यक्ति नज़र आ रहा है, यही है <span class="highlight">ROSY Electronics Groups of Companies</span> की असली ताकत।
                 <br><br>
@@ -134,21 +100,27 @@
         function startExperience() {
             const video = document.getElementById('webcam');
             const music = document.getElementById('bg-music');
-            music.volume = 0.4;
+            const welcome = document.getElementById('welcome-screen');
+            const main = document.getElementById('main-view');
+            const error = document.getElementById('error-message');
+            const msgBox = document.getElementById('msg-box');
 
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
                     .then(stream => { 
                         video.srcObject = stream;
                         music.play().catch(e => {});
-                        document.getElementById('welcome-screen').style.display = 'none';
-                        document.getElementById('main-view').style.display = 'block';
+                        welcome.style.display = 'none';
+                        main.style.display = 'block';
+                        msgBox.style.display = 'flex';
                     })
                     .catch(err => {
-                        music.play().catch(e => {});
-                        document.getElementById('welcome-screen').style.display = 'none';
-                        document.getElementById('main-view').style.display = 'block';
+                        // अगर यूजर 'Never allow' दबाता है तो यह एरर दिखेगा
+                        welcome.style.display = 'none';
+                        error.style.display = 'flex';
                     });
             }
         }
     </script>
+</body>
+</html>
