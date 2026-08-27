@@ -12,7 +12,7 @@
             flex-direction: column; justify-content: center; align-items: center; overflow: hidden;
         }
 
-        /* 1. वेलकम स्क्रीन */
+        /* 1. पहली स्क्रीन */
         #welcome-screen {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-align: center; width: 100%; height: 100%; padding: 20px;
@@ -25,20 +25,18 @@
             box-shadow: 0 4px 20px rgba(255,255,255,0.3); max-width: 90%; line-height: 1.4;
         }
 
-        /* 2. मुख्य कैमरा व्यू */
+        /* 2. मुख्य कैमरा और मैसेज व्यू */
         #main-view { display: none; width: 100%; height: 100%; position: relative; }
         video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
         
-        /* 3. मोटिवेशनल टेक्स्ट एरिया - शुरुआत में छुपा रहेगा जब तक कैमरा एक्टिव न हो */
         .text-container-transparent {
             position: absolute; bottom: 40px; left: 5%; width: 90%; height: 400px;
             overflow: hidden; z-index: 999; display: none; justify-content: center; align-items: center;
-            background: transparent !important;
         }
         .upward-text {
             display: block; width: 100%; font-size: 1.6rem; font-weight: bold;
             color: #fff; text-align: center; white-space: normal; line-height: 1.7;
-            text-shadow: 2px 2px 5px #000, -2px -2px 5px #000, 2px -2px 5px #000, -2px 2px 5px #000; 
+            text-shadow: 2px 2px 5px #000, -2px -2px 5px #000; 
             animation: scrollUpEffect 22s linear infinite;
         }
         .highlight { color: #FFFF00 !important; }
@@ -47,7 +45,6 @@
 </head>
 <body>
 
-    <!-- बैकग्राउंड संगीत प्लेयर -->
     <audio id="bg-music" loop preload="auto">
         <source src="https://mixkit.co" type="audio/mpeg">
     </audio>
@@ -65,11 +62,11 @@
             <div class="upward-text">
                 यह जो सामने चेहरा या व्यक्ति नज़र आ रहा है, यही है <span class="highlight">ROSY Electronics Groups of Companies</span> की असली ताकत।
                 <br><br>
-                आप ही हैं वो इंसान जो अपनी ईमानदारी, सूझ-बूझ and कड़ी मेहनत से कंपनी को आगे प्रगति पर ले जा सकता है... 
+                आप ही हैं वो इंसान जो अपनी ईमानदारी, सूझ-बूझ और कड़ी मेहनत से कंपनी को आगे प्रगति पर ले जा सकता है... 
                 <br><br>
-                आपकी हर कोशिश and हर दिन का योगदान ही <span class="highlight">ROSY Electronics Groups of Companies</span> को सबसे आगे रखता है। 
+                आपकी हर कोशिश और हर दिन का योगदान ही <span class="highlight">ROSY Electronics Groups of Companies</span> को सबसे आगे रखता है। 
                 <br><br>
-                आप सिर्फ एक चेहरा या व्यक्ति ही नहीं आप <span class="highlight">ROSY Electronics Groups of Companies</span> के महत्वपूर्ण and मज़बूत स्तंभ हैं!
+                आप सिर्फ एक चेहरा या व्यक्ति ही नहीं आप <span class="highlight">ROSY Electronics Groups of Companies</span> के महत्वपूर्ण और मज़बूत स्तंभ हैं!
             </div>
         </div>
     </div>
@@ -78,30 +75,28 @@
         function startExperience() {
             const video = document.getElementById('webcam');
             const music = document.getElementById('bg-music');
+            const welcome = document.getElementById('welcome-screen');
+            const main = document.getElementById('main-view');
             const msgBox = document.getElementById('msg-box');
-            
-            // संगीत चालू करना
-            music.volume = 0.45;
-            music.play().catch(e => console.log("Music play blocked:", e));
 
-            // कैमरा एक्सेस मांगना (यह सीधे मोबाइल का Allow बॉक्स ट्रिगर करेगा)
+            // कैमरा एक्सेस मांगना - जैसे ही "Allow" पर क्लिक करेंगे, जादू शुरू होगा
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
                     .then(stream => { 
                         video.srcObject = stream;
                         
-                        // जैसे ही वीडियो पर डेटा लोड होना शुरू होगा, तभी स्क्रीन बदलेगी और मैसेज आएगा
+                        // कैमरा डेटा लोड होने पर ही सब कुछ दिखाएं
                         video.onloadedmetadata = function() {
-                            document.getElementById('welcome-screen').style.display = 'none';
-                            document.getElementById('main-view').style.display = 'block';
-                            msgBox.style.display = 'flex'; // मैसेज बॉक्स अब खुलेगा
+                            music.play().catch(e => {});
+                            welcome.style.display = 'none';
+                            main.style.display = 'block';
+                            msgBox.style.display = 'flex';
                         };
                     })
                     .catch(err => {
-                        alert("कृपया अपने ब्राउज़र की सेटिंग में जाकर कैमरा 'Allow' (अनुमति) करें, अन्यथा आप खुद को स्क्रीन पर नहीं देख पाएंगे।");
+                        // अगर यूजर 'Allow' नहीं करता, तो हम उसे दोबारा बटन पर ही रहने देंगे
+                        console.log("Permission denied");
                     });
-            } else {
-                alert("आपका ब्राउज़र कैमरा सपोर्ट नहीं करता है।");
             }
         }
     </script>
