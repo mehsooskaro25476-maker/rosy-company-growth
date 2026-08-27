@@ -79,16 +79,19 @@
             const video = document.getElementById('webcam');
             const music = document.getElementById('bg-music');
             
-            // कैमरा एक्सेस की तुरंत रिक्वेस्ट (यह सीधे मोबाइल का Allow बॉक्स ट्रिगर करेगा)
+            // बटन दबाते ही तुरंत पहली स्क्रीन हट जाएगी और कैमरा व्यू खुल जाएगा
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('main-view').style.display = 'block';
+
+            // संगीत चालू करना
+            music.volume = 0.45;
+            music.play().catch(e => console.log("Music play blocked:", e));
+
+            // कैमरा एक्सेस मांगना (यह सीधे मोबाइल का Allow बॉक्स ट्रिगर करेगा)
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
                     .then(stream => { 
                         video.srcObject = stream;
-                        music.play().catch(e => console.log(e));
-                        
-                        // "Allow" पर क्लिक करते ही तुरंत स्क्रीन बदल जाएगी
-                        document.getElementById('welcome-screen').style.display = 'none';
-                        document.getElementById('main-view').style.display = 'block';
                     })
                     .catch(err => {
                         console.log("Permission denied or camera error");
