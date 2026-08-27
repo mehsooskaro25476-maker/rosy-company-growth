@@ -55,24 +55,11 @@
             max-width: 90%;
             line-height: 1.4;
         }
-        .arrow-icon {
-            font-size: 2rem;
-            animation: bounce 2s infinite;
-        }
+        .arrow-icon { font-size: 2rem; animation: bounce 2s infinite; }
 
         /* 2. मुख्य कैमरा व्यू */
-        #main-view {
-            display: none;
-            width: 100%;
-            height: 100%;
-            position: relative;
-        }
-        video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transform: scaleX(-1);
-        }
+        #main-view { display: none; width: 100%; height: 100%; position: relative; }
+        video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
         
         /* 3. पारदर्शी टेक्स्ट एरिया - ऊंचाई बढ़ाई गई है */
         .text-container-transparent {
@@ -80,7 +67,7 @@
             bottom: 40px;
             left: 5%;
             width: 90%;
-            height: 380px; /* मैसेज के लिए जगह और ऊपर तक बढ़ाई गई है */
+            height: 400px;
             overflow: hidden;
             z-index: 999999 !important;
             background: transparent !important;
@@ -89,30 +76,31 @@
             align-items: center;
         }
         
-        /* नीचे से ऊपर जाने वाला साफ़ बड़ा टेक्स्ट - रंग और साइज बिल्कुल नया है */
+        /* लाल रंग का टेक्स्ट और पीला हाईलाइट एनीमेशन */
         .upward-text {
             display: block;
             width: 100%;
             font-size: 1.6rem !important;
             font-weight: bold;
-            color: #fff !important;
+            color: #ff0000 !important; /* फॉन्ट कलर को लाल (RED) किया गया */
             text-align: center;
             white-space: normal;
             padding: 0 10px;
             position: relative;
             line-height: 1.7;
-            text-shadow: 3px 3px 5px #000, -3px -3px 5px #000, 0 0 12px #ffcc00, 0 0 25px #ffcc00; 
-            animation: scrollUpEffect 24s linear infinite; /* लंबा मैसेज होने के कारण टाइमिंग 24 सेकंड की है */
+            text-shadow: 2px 2px 3px #000; 
+            animation: scrollUpEffect 25s linear infinite;
         }
 
+        /* पीला (Yellow) हाईलाइटेड हिस्सा */
         .highlight {
             color: #fffb00 !important;
+            text-shadow: 0 0 10px rgba(255, 251, 0, 0.6);
         }
 
-        /* पूरे लंबे टेक्स्ट को बिना कटे ऊपर भेजने का बिल्कुल नया एनीमेशन */
         @keyframes scrollUpEffect {
-            0% { transform: translateY(380px); }     
-            100% { transform: translateY(-460px); }  
+            0% { transform: translateY(400px); }
+            100% { transform: translateY(-500px); }
         }
 
         @keyframes bounce {
@@ -124,12 +112,11 @@
 </head>
 <body>
 
-    <!-- बिल्कुल नया और 100% वर्किंग मोटिवेशनल बैकग्राउंड संगीत प्लेयर -->
+    <!-- बैकग्राउंड मोटिवेशनल संगीत प्लेयर -->
     <audio id="bg-music" loop preload="auto">
-        <source src="https://mixkit.co" type="audio/mpeg">
+        <source src="https://soundhelix.com" type="audio/mpeg">
     </audio>
 
-    <!-- पहला व्यू -->
     <div id="welcome-screen">
         <div class="main-title">एक बात जोकि आप सबको पता होनी चाहिए...</div>
         <button class="action-btn" onclick="startExperience()">
@@ -138,11 +125,9 @@
         <div class="arrow-icon">⬇️</div>
     </div>
 
-    <!-- दूसरा व्यू (क्लिक के बाद) -->
     <div id="main-view">
         <video id="webcam" autoplay playsinline></video>
         
-        <!-- बिना किसी डिब्बे के सीधे कैमरे पर तैरता हुआ आपका संदेश -->
         <div class="text-container-transparent">
             <div class="upward-text">
                 यह जो सामने चेहरा या व्यक्ति नज़र आ रहा है, यही है <span class="highlight">ROSY Electronics Groups of Companies</span> की असली ताकत।
@@ -160,27 +145,29 @@
         function startExperience() {
             const video = document.getElementById('webcam');
             const music = document.getElementById('bg-music');
-            
-            // संगीत की आवाज़ को थोड़ा धीमा (45%) सेट किया है
-            music.volume = 0.45; 
+            music.volume = 0.5;
 
+            // कैमरा एक्सेस मांगना और म्यूजिक प्ले करना
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
                     .then(stream => { 
                         video.srcObject = stream;
                         
-                        // संगीत को ज़बरदस्ती प्ले करने की स्क्रिप्ट
-                        music.play().catch(error => {
-                            console.log("Music play blocked by browser. Trying alternative...", error);
-                        });
+                        // म्यूजिक प्ले करने का प्रयास
+                        var playPromise = music.play();
+                        if (playPromise !== undefined) {
+                            playPromise.then(_ => {
+                                console.log("Music started!");
+                            }).catch(error => {
+                                console.log("Music play blocked.");
+                            });
+                        }
 
                         document.getElementById('welcome-screen').style.display = 'none';
                         document.getElementById('main-view').style.display = 'block';
                     })
                     .catch(err => {
-                        console.log("Camera access denied.");
-                        // अगर कैमरा डेस्कटॉप पर नहीं भी है, तो भी म्यूजिक और टेक्स्ट चालू हो जाए
-                        music.play().catch(e => console.log(e));
+                        music.play().catch(e => {});
                         document.getElementById('welcome-screen').style.display = 'none';
                         document.getElementById('main-view').style.display = 'block';
                     });
