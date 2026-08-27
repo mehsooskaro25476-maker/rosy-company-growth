@@ -6,27 +6,47 @@
     <title>Rosy Electronics</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #000; font-family: Arial, sans-serif; color: #fff; height: 100vh; width: 100vw; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; }
-        #welcome-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; width: 100%; height: 100%; padding: 20px; position: absolute; z-index: 10; background: #000; }
+        body { 
+            background: #000; font-family: 'Arial', sans-serif; color: #fff;
+            height: 100vh; width: 100vw; display: flex;
+            flex-direction: column; justify-content: center; align-items: center; overflow: hidden;
+        }
+        #welcome-screen {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; width: 100%; height: 100%; padding: 20px;
+            position: absolute; z-index: 10; background: #000;
+        }
         .main-title { font-size: 1.8rem; font-weight: bold; margin-bottom: 40px; line-height: 1.5; }
-        .action-btn { background-color: #fff; color: #000; font-size: 1.2rem; font-weight: bold; padding: 18px 30px; border-radius: 50px; border: none; cursor: pointer; box-shadow: 0 4px 20px rgba(255,255,255,0.3); max-width: 90%; line-height: 1.4; }
+        .action-btn {
+            background-color: #fff; color: #000; font-size: 1.2rem; font-weight: bold;
+            padding: 18px 30px; border-radius: 50px; border: none; cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255,255,255,0.3); max-width: 90%; line-height: 1.4;
+        }
         #main-view { display: none; width: 100%; height: 100%; position: relative; }
         video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-        .text-container-transparent { position: absolute; bottom: 40px; left: 5%; width: 90%; height: 400px; overflow: hidden; z-index: 999; display: none; justify-content: center; align-items: center; }
-        .upward-text { display: block; width: 100%; font-size: 1.6rem; font-weight: bold; color: #fff; text-align: center; white-space: normal; line-height: 1.7; text-shadow: 2px 2px 5px #000, -2px -2px 5px #000; animation: scrollUpEffect 25s linear infinite; }
+        .text-container-transparent {
+            position: absolute; bottom: 40px; left: 5%; width: 90%; height: 400px;
+            overflow: hidden; z-index: 999; display: none; justify-content: center; align-items: center;
+        }
+        .upward-text {
+            display: block; width: 100%; font-size: 1.65rem; font-weight: bold;
+            color: #fff; text-align: center; white-space: normal; line-height: 1.7;
+            text-shadow: 2px 2px 5px #000, -2px -2px 5px #000; 
+            animation: scrollUpEffect 25s linear infinite;
+        }
         .highlight { color: #FFFF00 !important; }
-        @keyframes scrollUpEffect { 0% { transform: translateY(400px); } 100% { transform: translateY(-800px); } }
+        @keyframes scrollUpEffect { 0% { transform: translateY(400px); } 100% { transform: translateY(-750px); } }
     </style>
 </head>
 <body>
-    <!-- म्यूजिक के लिए MP3 फाइल - नया और तेज़ लिंक -->
+    <!-- तेज़ लोड होने वाला ऑडियो -->
     <audio id="bg-music" loop preload="auto">
-        <source src="https://pixabay.com" type="audio/mpeg">
+        <source src="https://soundhelix.com" type="audio/mpeg">
     </audio>
 
     <div id="welcome-screen">
         <div class="main-title">एक बात जोकि आप सबको पता होनी चाहिए...</div>
-        <button class="action-btn" onclick="startExperience()">
+        <button id="start-btn" class="action-btn">
              जानिए... आखिर कौन है ROSY Electronics Groups of Companies की असली ताकत? 🤔💡
         </button>
     </div>
@@ -47,34 +67,34 @@
     </div>
 
     <script>
-        function startExperience() {
-            const video = document.getElementById('webcam');
-            const music = document.getElementById('bg-music');
-            const msgBox = document.getElementById('msg-box');
-            
-            // म्यूजिक प्ले करने का प्रयास
-            music.volume = 0.5;
-            music.play().catch(e => {
-                console.log("Music play blocked, will try again after interaction", e);
-            });
+        const btn = document.getElementById('start-btn');
+        const music = document.getElementById('bg-music');
+        const video = document.getElementById('webcam');
+
+        btn.addEventListener('click', function() {
+            // ऑडियो अनलॉक ट्रिक
+            music.play().then(() => {
+                console.log("Music started!");
+            }).catch(e => console.log("Music blocked"));
 
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
                     .then(stream => { 
                         video.srcObject = stream;
                         video.onloadedmetadata = function() {
-                            // म्यूजिक को दोबारा प्ले करने का प्रयास (जबरदस्ती)
-                            music.play();
                             document.getElementById('welcome-screen').style.display = 'none';
                             document.getElementById('main-view').style.display = 'block';
-                            msgBox.style.display = 'flex';
+                            document.getElementById('msg-box').style.display = 'flex';
+                            music.play(); // पक्का करने के लिए दोबारा प्ले
                         };
                     })
                     .catch(err => {
-                        alert("कृपया कैमरा 'Allow' करें ताकि आप अपना चेहरा देख सकें।");
+                        document.getElementById('welcome-screen').style.display = 'none';
+                        document.getElementById('main-view').style.display = 'block';
+                        document.getElementById('msg-box').style.display = 'flex';
                     });
             }
-        }
+        });
     </script>
 </body>
 </html>
