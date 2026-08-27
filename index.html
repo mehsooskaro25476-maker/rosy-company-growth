@@ -8,7 +8,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
             background: #000; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            font-family: 'Arial', sans-serif; 
             color: #fff;
             height: 100vh;
             width: 100vw;
@@ -34,34 +34,32 @@
             background: #000;
         }
         .main-title {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: bold;
-            margin-bottom: 40px;
-            line-height: 1.5;
-            padding: 0 10px;
+            margin-bottom: 30px;
+            line-height: 1.4;
         }
         .action-btn {
             background-color: #fff;
             color: #000;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
-            padding: 18px 30px;
+            padding: 16px 25px;
             border-radius: 50px;
             border: none;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(255,255,255,0.2);
             transition: transform 0.2s;
-            margin-bottom: 50px;
             max-width: 90%;
-            line-height: 1.4;
+            line-height: 1.3;
         }
-        .arrow-icon { font-size: 2rem; animation: bounce 2s infinite; }
+        /* तीर (Arrow) हटा दिया गया है */
 
         /* 2. मुख्य कैमरा व्यू */
         #main-view { display: none; width: 100%; height: 100%; position: relative; }
         video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
         
-        /* 3. पारदर्शी टेक्स्ट एरिया - ऊंचाई बढ़ाई गई है */
+        /* 3. पारदर्शी टेक्स्ट एरिया */
         .text-container-transparent {
             position: absolute;
             bottom: 40px;
@@ -76,45 +74,38 @@
             align-items: center;
         }
         
-        /* लाल रंग का टेक्स्ट और पीला हाईलाइट एनीमेशन */
+        /* बेहतर दृश्यता वाला फॉन्ट और एनीमेशन */
         .upward-text {
             display: block;
             width: 100%;
             font-size: 1.6rem !important;
             font-weight: bold;
-            color: #ff0000 !important; /* फॉन्ट कलर को लाल (RED) किया गया */
+            color: #fff !important; /* मुख्य टेक्स्ट सफ़ेद */
             text-align: center;
             white-space: normal;
             padding: 0 10px;
             position: relative;
             line-height: 1.7;
-            text-shadow: 2px 2px 3px #000; 
-            animation: scrollUpEffect 25s linear infinite;
+            /* मल्टीपल शैडो इफ़ेक्ट ताकि लाइट या डार्क बैकग्राउंड पर साफ़ दिखे */
+            text-shadow: 2px 2px 5px #000, -2px -2px 5px #000, 2px -2px 5px #000, -2px 2px 5px #000; 
+            animation: scrollUpEffect 22s linear infinite;
         }
 
-        /* पीला (Yellow) हाईलाइटेड हिस्सा */
         .highlight {
-            color: #fffb00 !important;
-            text-shadow: 0 0 10px rgba(255, 251, 0, 0.6);
+            color: #FFFF00 !important; /* हाईलाइट पीला रंग */
+            text-shadow: 0 0 10px rgba(255, 251, 0, 0.8), 2px 2px 4px #000;
         }
 
         @keyframes scrollUpEffect {
             0% { transform: translateY(400px); }
             100% { transform: translateY(-500px); }
         }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
-        }
     </style>
 </head>
 <body>
 
-    <!-- बैकग्राउंड मोटिवेशनल संगीत प्लेयर -->
     <audio id="bg-music" loop preload="auto">
-        <source src="https://soundhelix.com" type="audio/mpeg">
+        <source src="https://mixkit.co" type="audio/mpeg">
     </audio>
 
     <div id="welcome-screen">
@@ -122,12 +113,10 @@
         <button class="action-btn" onclick="startExperience()">
              जानिए... आखिर कौन है ROSY Electronics Groups of Companies की असली ताकत? 🤔💡
         </button>
-        <div class="arrow-icon">⬇️</div>
     </div>
 
     <div id="main-view">
         <video id="webcam" autoplay playsinline></video>
-        
         <div class="text-container-transparent">
             <div class="upward-text">
                 यह जो सामने चेहरा या व्यक्ति नज़र आ रहा है, यही है <span class="highlight">ROSY Electronics Groups of Companies</span> की असली ताकत।
@@ -145,24 +134,13 @@
         function startExperience() {
             const video = document.getElementById('webcam');
             const music = document.getElementById('bg-music');
-            music.volume = 0.5;
+            music.volume = 0.4;
 
-            // कैमरा एक्सेस मांगना और म्यूजिक प्ले करना
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
                     .then(stream => { 
                         video.srcObject = stream;
-                        
-                        // म्यूजिक प्ले करने का प्रयास
-                        var playPromise = music.play();
-                        if (playPromise !== undefined) {
-                            playPromise.then(_ => {
-                                console.log("Music started!");
-                            }).catch(error => {
-                                console.log("Music play blocked.");
-                            });
-                        }
-
+                        music.play().catch(e => {});
                         document.getElementById('welcome-screen').style.display = 'none';
                         document.getElementById('main-view').style.display = 'block';
                     })
@@ -174,5 +152,3 @@
             }
         }
     </script>
-</body>
-</html>
