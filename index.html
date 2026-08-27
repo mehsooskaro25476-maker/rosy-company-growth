@@ -7,7 +7,7 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            background: #000; font-family: Arial, sans-serif; color: #fff;
+            background: #000; font-family: 'Arial', sans-serif; color: #fff;
             height: 100vh; width: 100vw; display: flex;
             flex-direction: column; justify-content: center; align-items: center; overflow: hidden;
         }
@@ -18,51 +18,51 @@
             text-align: center; width: 100%; height: 100%; padding: 20px;
             position: absolute; z-index: 10; background: #000;
         }
-        .main-title { font-size: 1.8rem; font-weight: bold; margin-bottom: 30px; line-height: 1.4; }
+        .main-title { font-size: 1.8rem; font-weight: bold; margin-bottom: 40px; line-height: 1.5; }
         .action-btn {
-            background-color: #fff; color: #000; font-size: 1.1rem; font-weight: bold;
-            padding: 16px 25px; border-radius: 50px; border: none; cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255,255,255,0.2); max-width: 90%; line-height: 1.3;
+            background-color: #fff; color: #000; font-size: 1.2rem; font-weight: bold;
+            padding: 18px 30px; border-radius: 50px; border: none; cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255,255,255,0.3); max-width: 90%; line-height: 1.4;
         }
 
-        /* 2. मुख्य कैमरा व्यू और एरर मैसेज */
+        /* गाइड पट्टी जो भ्रम दूर करेगी */
+        #guide-overlay {
+            display: none; position: fixed; top: 0; width: 100%; height: 100px;
+            background: #FFD700; color: #000; z-index: 999999;
+            text-align: center; padding: 20px; font-weight: bold; font-size: 1.3rem;
+            animation: slideDown 0.5s ease-out; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        @keyframes slideDown { from {top: -100px;} to {top: 0;} }
+
+        /* 2. मुख्य कैमरा व्यू */
         #main-view { display: none; width: 100%; height: 100%; position: relative; }
         video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
         
-        #error-message {
-            display: none; padding: 30px; text-align: center;
-            flex-direction: column; justify-content: center; align-items: center;
-            height: 100%; width: 100%; background: #000;
-        }
-        .retry-btn { margin-top: 20px; padding: 10px 20px; background: #fff; color: #000; border-radius: 20px; text-decoration: none; }
-
-        /* 3. मोटिवेशनल टेक्स्ट */
+        /* 3. मोटिवेशनल टेक्स्ट एनीमेशन */
         .text-container-transparent {
-            position: absolute; bottom: 40px; left: 5%; width: 90%; height: 400px;
-            overflow: hidden; z-index: 999999; background: transparent;
-            display: none; justify-content: center; align-items: center;
+            position: absolute; bottom: 40px; left: 5%; width: 90%; height: 350px;
+            overflow: hidden; z-index: 999; display: flex; justify-content: center; align-items: center;
         }
         .upward-text {
             display: block; width: 100%; font-size: 1.6rem; font-weight: bold;
-            color: #fff; text-align: center; white-space: normal;
-            line-height: 1.7; text-shadow: 2px 2px 5px #000, -2px -2px 5px #000; 
+            color: #fff; text-align: center; white-space: normal; line-height: 1.6;
+            text-shadow: 2px 2px 5px #000, -2px -2px 5px #000; 
             animation: scrollUpEffect 22s linear infinite;
         }
         .highlight { color: #FFFF00 !important; }
-
-        @keyframes scrollUpEffect {
-            0% { transform: translateY(400px); }
-            100% { transform: translateY(-500px); }
-        }
+        @keyframes scrollUpEffect { 0% { transform: translateY(350px); } 100% { transform: translateY(-450px); } }
     </style>
 </head>
 <body>
 
+    <!-- म्यूजिक प्लेयर -->
     <audio id="bg-music" loop preload="auto">
         <source src="https://mixkit.co" type="audio/mpeg">
     </audio>
 
-    <!-- वेलकम स्क्रीन -->
+    <!-- गाइड पट्टी -->
+    <div id="guide-overlay">नीचे आने वाले "Allow" बटन पर क्लिक करें! 👇</div>
+
     <div id="welcome-screen">
         <div class="main-title">एक बात जोकि आप सबको पता होनी चाहिए...</div>
         <button class="action-btn" onclick="startExperience()">
@@ -70,20 +70,9 @@
         </button>
     </div>
 
-    <!-- एरर मैसेज (अगर परमिशन नहीं दी) -->
-    <div id="error-message">
-        <h2 style="color: #ffcc00;">कैमरा ब्लॉक है!</h2>
-        <p style="margin-top: 15px;">असली ताकत देखने के लिए कैमरा जरूरी है।</p>
-        <p style="font-size: 0.9rem; color: #aaa; margin-top: 10px;">
-            सेटिंग सुधारें: ऊपर <b>तीन बिंदुओं</b> (⋮) पर जाएं > <b>Settings</b> > <b>Site Settings</b> > <b>Camera</b> > इस साइट को <b>Allow</b> करें।
-        </p>
-        <a href="javascript:location.reload()" class="retry-btn">दोबारा कोशिश करें</a>
-    </div>
-
-    <!-- कैमरा और मैसेज -->
     <div id="main-view">
         <video id="webcam" autoplay playsinline></video>
-        <div id="msg-box" class="text-container-transparent">
+        <div class="text-container-transparent">
             <div class="upward-text">
                 यह जो सामने चेहरा या व्यक्ति नज़र आ रहा है, यही है <span class="highlight">ROSY Electronics Groups of Companies</span> की असली ताकत।
                 <br><br>
@@ -98,26 +87,25 @@
 
     <script>
         function startExperience() {
-            const video = document.getElementById('webcam');
-            const music = document.getElementById('bg-music');
+            const guide = document.getElementById('guide-overlay');
             const welcome = document.getElementById('welcome-screen');
             const main = document.getElementById('main-view');
-            const error = document.getElementById('error-message');
-            const msgBox = document.getElementById('msg-box');
+            const music = document.getElementById('bg-music');
+            
+            guide.style.display = 'block'; // गाइड पट्टी दिखाएँ
 
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
                     .then(stream => { 
-                        video.srcObject = stream;
-                        music.play().catch(e => {});
+                        document.getElementById('webcam').srcObject = stream;
+                        guide.style.display = 'none'; // कैमरा खुलते ही पट्टी हटाएँ
                         welcome.style.display = 'none';
                         main.style.display = 'block';
-                        msgBox.style.display = 'flex';
+                        music.play().catch(e => {});
                     })
                     .catch(err => {
-                        // अगर यूजर 'Never allow' दबाता है तो यह एरर दिखेगा
-                        welcome.style.display = 'none';
-                        error.style.display = 'flex';
+                        // अगर ब्लॉक किया तो भी निर्देश दें
+                        guide.innerHTML = "कैमरा ब्लॉक है! कृपया सेटिंग में जाकर 'Allow' करें।";
                     });
             }
         }
