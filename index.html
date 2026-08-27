@@ -29,10 +29,10 @@
         #main-view { display: none; width: 100%; height: 100%; position: relative; }
         video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
         
-        /* 3. मोटिवेशनल टेक्स्ट एनीमेशन */
+        /* 3. मोटिवेशनल टेक्स्ट एरिया - शुरुआत में छुपा रहेगा जब तक कैमरा एक्टिव न हो */
         .text-container-transparent {
             position: absolute; bottom: 40px; left: 5%; width: 90%; height: 400px;
-            overflow: hidden; z-index: 999; display: flex; justify-content: center; align-items: center;
+            overflow: hidden; z-index: 999; display: none; justify-content: center; align-items: center;
             background: transparent !important;
         }
         .upward-text {
@@ -61,15 +61,15 @@
 
     <div id="main-view">
         <video id="webcam" autoplay playsinline></video>
-        <div class="text-container-transparent">
+        <div id="msg-box" class="text-container-transparent">
             <div class="upward-text">
                 यह जो सामने चेहरा या व्यक्ति नज़र आ रहा है, यही है <span class="highlight">ROSY Electronics Groups of Companies</span> की असली ताकत।
                 <br><br>
-                आप ही हैं वो इंसान जो अपनी ईमानदारी, सूझ-बूझ और कड़ी मेहनत से कंपनी को आगे प्रगति पर ले जा सकता है... 
+                आप ही हैं वो इंसान जो अपनी ईमानदारी, सूझ-बूझ and कड़ी मेहनत से कंपनी को आगे प्रगति पर ले जा सकता है... 
                 <br><br>
-                आपकी हर कोशिश और हर दिन का योगदान ही <span class="highlight">ROSY Electronics Groups of Companies</span> को सबसे आगे रखता है। 
+                आपकी हर कोशिश and हर दिन का योगदान ही <span class="highlight">ROSY Electronics Groups of Companies</span> को सबसे आगे रखता है। 
                 <br><br>
-                आप सिर्फ एक चेहरा या व्यक्ति ही नहीं आप <span class="highlight">ROSY Electronics Groups of Companies</span> के महत्वपूर्ण और मज़बूत स्तंभ हैं!
+                आप सिर्फ एक चेहरा या व्यक्ति ही नहीं आप <span class="highlight">ROSY Electronics Groups of Companies</span> के महत्वपूर्ण and मज़बूत स्तंभ हैं!
             </div>
         </div>
     </div>
@@ -78,11 +78,8 @@
         function startExperience() {
             const video = document.getElementById('webcam');
             const music = document.getElementById('bg-music');
+            const msgBox = document.getElementById('msg-box');
             
-            // बटन दबाते ही तुरंत पहली स्क्रीन हट जाएगी और कैमरा व्यू खुल जाएगा
-            document.getElementById('welcome-screen').style.display = 'none';
-            document.getElementById('main-view').style.display = 'block';
-
             // संगीत चालू करना
             music.volume = 0.45;
             music.play().catch(e => console.log("Music play blocked:", e));
@@ -92,10 +89,19 @@
                 navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
                     .then(stream => { 
                         video.srcObject = stream;
+                        
+                        // जैसे ही वीडियो पर डेटा लोड होना शुरू होगा, तभी स्क्रीन बदलेगी और मैसेज आएगा
+                        video.onloadedmetadata = function() {
+                            document.getElementById('welcome-screen').style.display = 'none';
+                            document.getElementById('main-view').style.display = 'block';
+                            msgBox.style.display = 'flex'; // मैसेज बॉक्स अब खुलेगा
+                        };
                     })
                     .catch(err => {
-                        console.log("Permission denied or camera error");
+                        alert("कृपया अपने ब्राउज़र की सेटिंग में जाकर कैमरा 'Allow' (अनुमति) करें, अन्यथा आप खुद को स्क्रीन पर नहीं देख पाएंगे।");
                     });
+            } else {
+                alert("आपका ब्राउज़र कैमरा सपोर्ट नहीं करता है।");
             }
         }
     </script>
