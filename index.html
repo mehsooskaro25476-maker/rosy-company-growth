@@ -31,35 +31,35 @@
         
         /* 3. पारदर्शी टेक्स्ट एरिया */
         .text-container-transparent {
-            position: absolute; bottom: 40px; left: 5%; width: 90%; height: 380px;
+            position: absolute; bottom: 40px; left: 5%; width: 90%; height: 400px;
             overflow: hidden; z-index: 999; display: flex; justify-content: center; align-items: center;
         }
         
-        /* नया फॉन्ट कलर और बेहतर एनीमेशन */
+        /* बेहतर एनीमेशन: मैसेज पूरा ख़त्म होने के बाद ही रिपीट होगा */
         .upward-text {
-            display: block; width: 100%; font-size: 1.6rem !important; font-weight: bold;
+            display: block; width: 100%; font-size: 1.65rem !important; font-weight: bold;
             color: #fff !important; text-align: center; white-space: normal; line-height: 1.7;
             text-shadow: 2px 2px 5px #000, -2px -2px 5px #000, 2px -2px 5px #000, -2px 2px 5px #000; 
-            animation: scrollUpEffect 26s linear infinite; /* गति को 26 सेकंड किया गया ताकि पूरा मैसेज आ सके */
+            animation: scrollUpEffect 25s linear infinite;
         }
         .highlight { color: #FFFF00 !important; }
 
         @keyframes scrollUpEffect {
-            0% { transform: translateY(380px); }
-            100% { transform: translateY(-700px); } /* दूरी बढ़ाई ताकि पूरा मैसेज ऊपर तक जाए */
+            0% { transform: translateY(400px); }
+            100% { transform: translateY(-750px); } /* दूरी बढ़ाई ताकि पूरा मैसेज ऊपर तक जाए */
         }
     </style>
 </head>
 <body>
 
-    <!-- नया मोटिवेशनल म्यूजिक लिंक -->
+    <!-- नया तेज़ मोटिवेशनल पियानो म्यूजिक -->
     <audio id="bg-music" loop preload="auto">
-        <source src="https://soundhelix.com" type="audio/mpeg">
+        <source src="https://mixkit.co" type="audio/mpeg">
     </audio>
 
     <div id="welcome-screen">
         <div class="main-title">एक बात जोकि आप सबको पता होनी चाहिए...</div>
-        <button class="action-btn" onclick="startExperience()">
+        <button id="start-btn" class="action-btn" onclick="startExperience()">
              जानिए... आखिर कौन है ROSY Electronics Groups of Companies की असली ताकत? 🤔💡
         </button>
     </div>
@@ -84,12 +84,12 @@
             const video = document.getElementById('webcam');
             const music = document.getElementById('bg-music');
             
-            // संगीत चालू करने के लिए मजबूर करना
+            // संगीत की आवाज़ सेट करना और प्ले करना (बटन क्लिक पर अनिवार्य)
             music.volume = 0.5;
             music.play().then(() => {
-                console.log("Music started successfully");
-            }).catch(error => {
-                console.log("Auto-play was prevented. Trying again after permission.");
+                console.log("Music started!");
+            }).catch(e => {
+                console.log("Music failed, check browser mute settings", e);
             });
 
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -100,7 +100,9 @@
                         document.getElementById('main-view').style.display = 'block';
                     })
                     .catch(err => {
-                        console.log("Camera access denied.");
+                        // अगर कैमरा मना किया, तो भी म्यूजिक और मैसेज चले
+                        document.getElementById('welcome-screen').style.display = 'none';
+                        document.getElementById('main-view').style.display = 'block';
                     });
             }
         }
